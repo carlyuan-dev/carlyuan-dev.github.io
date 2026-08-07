@@ -31,8 +31,8 @@
       <div class="cy-song">
         <div class="cy-song-mark">♪</div>
         <div>
-          <div class="cy-song-title">过去来的人</div>
-          <div class="cy-song-artist">刘森</div>
+          <div class="cy-song-title">占位</div>
+          <div class="cy-song-artist">占位</div>
         </div>
       </div>
     `;
@@ -54,25 +54,21 @@
   const panel = document.createElement('section');
   panel.className = 'cy-home-panel';
   panel.innerHTML = `
-    <p class="cy-home-eyebrow">最近</p>
-    <h2 class="cy-home-title">最近先把做过的东西重新讲清楚</h2>
-    <p class="cy-home-desc">这里会放学习记录、项目复盘和实验笔记。内容尽量围绕具体问题写：一段链路怎么跑通，一个 badcase 怎么定位，一次模型实验留下了什么边界。</p>
+    <p class="cy-home-eyebrow">占位</p>
+    <h2 class="cy-home-title">占位</h2>
+    <p class="cy-home-desc">这里先留空。</p>
     <div class="cy-home-grid">
       <div class="cy-home-card">
-        <h3>最近在做</h3>
-        <ul>
-          <li>整理 DeepTutor-HKDSE 的 Agent/RAG 链路</li>
-          <li>拆 ChartMind-VL 的评估和 badcase 流程</li>
-          <li>补 PEFT、QLoRA 和模型评估笔记</li>
-        </ul>
+        <h3>占位</h3>
+        <p>占位。</p>
       </div>
       <div class="cy-home-card">
-        <h3>常写的方向</h3>
-        <p>Agent、RAG、多模态问答、本地模型适配、微调实验，以及一些工程里真实遇到的小问题。</p>
+        <h3>占位</h3>
+        <p>占位。</p>
       </div>
       <div class="cy-home-card">
-        <h3>留给自己的提醒</h3>
-        <p>能复现、能解释、能指出边界，才算真的读懂。博客先服务这个目标。</p>
+        <h3>占位</h3>
+        <p>占位。</p>
       </div>
     </div>
     <div class="cy-home-links">
