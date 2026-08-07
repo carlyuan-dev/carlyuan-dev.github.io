@@ -8,13 +8,42 @@
   --cy-rust: #b45f3c;
   --cy-blue: #426b86;
   --cy-shadow: 0 14px 34px rgba(39, 49, 58, 0.08);
+  --cy-hero-photo: none;
+  --cy-grid-line: rgba(46, 88, 76, 0.035);
+  --cy-shell: rgba(251, 248, 241, 0.86);
+  --cy-panel: rgba(251, 248, 241, 0.92);
+  --cy-pill: #fffaf1;
+  --cy-hero-wash-top: rgba(247, 242, 232, 0.28);
+  --cy-hero-wash-bottom: rgba(247, 242, 232, 0.9);
+  --cy-hero-mask: rgba(39, 49, 58, 0.04);
+  --cy-hero-mask-end: rgba(247, 242, 232, 0.22);
+}
+
+html[data-theme='dark'] {
+  --cy-paper: #151a18;
+  --cy-paper-soft: #1c2421;
+  --cy-ink: #e5e1d8;
+  --cy-muted: #a9b2aa;
+  --cy-line: rgba(229, 225, 216, 0.12);
+  --cy-green: #8fb7a6;
+  --cy-rust: #d39a79;
+  --cy-blue: #9ab6c9;
+  --cy-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+  --cy-grid-line: rgba(143, 183, 166, 0.045);
+  --cy-shell: rgba(28, 36, 33, 0.86);
+  --cy-panel: rgba(28, 36, 33, 0.92);
+  --cy-pill: #202923;
+  --cy-hero-wash-top: rgba(21, 26, 24, 0.34);
+  --cy-hero-wash-bottom: rgba(21, 26, 24, 0.92);
+  --cy-hero-mask: rgba(0, 0, 0, 0.18);
+  --cy-hero-mask-end: rgba(21, 26, 24, 0.38);
 }
 
 body {
   color: var(--cy-ink);
   background:
-    linear-gradient(90deg, rgba(46, 88, 76, 0.035) 1px, transparent 1px),
-    linear-gradient(rgba(46, 88, 76, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cy-grid-line) 1px, transparent 1px),
+    linear-gradient(var(--cy-grid-line) 1px, transparent 1px),
     var(--cy-paper);
   background-size: 28px 28px;
   letter-spacing: 0;
@@ -26,13 +55,18 @@ a {
 
 #page-header {
   background:
-    linear-gradient(180deg, rgba(247, 242, 232, 0.2), rgba(247, 242, 232, 0.88)),
+    linear-gradient(180deg, var(--cy-hero-wash-top), var(--cy-hero-wash-bottom)),
+    var(--cy-hero-photo),
     radial-gradient(circle at 20% 18%, rgba(180, 95, 60, 0.18), transparent 28%),
     linear-gradient(135deg, #f9f4ea 0%, #dbe7dc 54%, #e8d4c2 100%) !important;
+  background-position: center !important;
+  background-size: cover !important;
 }
 
 #page-header:before {
-  background: rgba(39, 49, 58, 0.08) !important;
+  background:
+    linear-gradient(180deg, rgba(39, 49, 58, 0.02), var(--cy-hero-mask-end)),
+    var(--cy-hero-mask) !important;
 }
 
 #page-header.full_page {
@@ -69,7 +103,7 @@ a {
 }
 
 #nav.show {
-  background: rgba(251, 248, 241, 0.86);
+  background: var(--cy-shell);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--cy-line);
 }
@@ -84,7 +118,7 @@ a {
 #page {
   border: 1px solid var(--cy-line);
   border-radius: 8px;
-  background: rgba(251, 248, 241, 0.86);
+  background: var(--cy-shell);
   box-shadow: var(--cy-shadow);
 }
 
@@ -144,7 +178,7 @@ a {
   padding: 22px;
   border: 1px solid var(--cy-line);
   border-radius: 8px;
-  background: rgba(251, 248, 241, 0.92);
+  background: var(--cy-panel);
   box-shadow: var(--cy-shadow);
 }
 
@@ -212,7 +246,7 @@ a {
   padding: 7px 11px;
   border: 1px solid rgba(46, 88, 76, 0.22);
   border-radius: 999px;
-  background: #fffaf1;
+  background: var(--cy-pill);
   color: var(--cy-green);
   font-size: 0.9rem;
 }
@@ -220,6 +254,58 @@ a {
 .cy-home-links a:hover {
   background: var(--cy-green);
   color: #fff;
+}
+
+.cy-listening-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.cy-listening-card:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 26%, rgba(180, 95, 60, 0.14), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(66, 107, 134, 0.12), transparent 28%);
+  pointer-events: none;
+}
+
+.cy-listening-card .item-headline,
+.cy-listening-card .cy-song {
+  position: relative;
+}
+
+.cy-song {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 8px;
+}
+
+.cy-song-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(46, 88, 76, 0.18);
+  border-radius: 50%;
+  background: var(--cy-pill);
+  color: var(--cy-rust);
+  font-size: 0.96rem;
+}
+
+.cy-song-title {
+  color: var(--cy-ink);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.cy-song-artist {
+  margin-top: 2px;
+  color: var(--cy-muted);
+  font-size: 0.88rem;
 }
 
 #post .post-copyright,

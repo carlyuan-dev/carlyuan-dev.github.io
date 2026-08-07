@@ -1,5 +1,51 @@
 (function () {
   const isHome = location.pathname === '/' || location.pathname === '/index.html';
+  const heroWallpapers = [
+    '/img/personal/hero-wallpaper/2026.1.2 黄山.jfif',
+    '/img/personal/hero-wallpaper/2026.3.22 上海共青森林公园.jfif',
+    '/img/personal/hero-wallpaper/2026.5.4 盐城丹顶鹤湿地.jfif'
+  ];
+
+  if (isHome) {
+    const dayIndex = Math.floor(Date.now() / 86400000) % heroWallpapers.length;
+    document.documentElement.style.setProperty(
+      '--cy-hero-photo',
+      `url("${encodeURI(heroWallpapers[dayIndex])}")`
+    );
+  }
+
+  const addListeningCard = () => {
+    if (document.querySelector('.cy-listening-card')) return;
+
+    const aside = document.querySelector('#aside-content');
+    if (!aside) return;
+
+    const announcement = aside.querySelector('.card-announcement');
+    const card = document.createElement('div');
+    card.className = 'card-widget cy-listening-card';
+    card.innerHTML = `
+      <div class="item-headline">
+        <i class="fas fa-music"></i>
+        <span>最近在听</span>
+      </div>
+      <div class="cy-song">
+        <div class="cy-song-mark">♪</div>
+        <div>
+          <div class="cy-song-title">过去来的人</div>
+          <div class="cy-song-artist">刘森</div>
+        </div>
+      </div>
+    `;
+
+    if (announcement) {
+      announcement.insertAdjacentElement('afterend', card);
+    } else {
+      aside.insertBefore(card, aside.firstChild);
+    }
+  };
+
+  addListeningCard();
+
   if (!isHome || document.querySelector('.cy-home-panel')) return;
 
   const recentPosts = document.querySelector('#recent-posts');
