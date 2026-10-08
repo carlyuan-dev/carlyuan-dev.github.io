@@ -1,0 +1,20 @@
+extends includes/layout.pug
+
+block content
+  .cy-directory(data-kind=page.blogType data-selected=JSON.stringify(page.selected || []))
+    section.cy-directory-content(aria-label=page.title + ' 文章目录' tabindex='0')
+      if !page.groups.length
+        p 暂无文章。
+      each group, i in page.groups
+        section.cy-post-group(data-group=group.key aria-labelledby='group-'+i)
+          h2(id='group-'+i)=group.label
+          ul.cy-post-list
+            each post in group.posts
+              li
+                a(href=url_for(post.url))=post.title
+    aside.cy-tag-index(aria-label=page.blogType === 'tags' ? '标签索引' : '年月索引' tabindex='0')
+      nav
+        each group, i in page.groups
+          a(href='#group-'+i)
+            span=group.label
+            span.cy-count= '[' + group.posts.length + ']'

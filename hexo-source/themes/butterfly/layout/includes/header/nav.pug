@@ -1,0 +1,18 @@
+nav#nav.cy-nav(aria-label='主导航')
+  #menus
+    .menus_items.cy-nav-links
+      span#blog-info
+        a.site-page.nav-site-title(href=url_for('/'))
+          span.site-name=config.title
+      a.site-page(href=url_for('/tags/') aria-current=page.title === 'Tags' ? 'page' : false) Tags
+      a.site-page(href=url_for('/archives/') aria-current=page.title === 'Archives' ? 'page' : false) Archives
+      button.site-page.cy-search-open(type='button' aria-expanded='false' aria-controls='cy-search-panel') Search
+      a.site-page(href=url_for('/about/') aria-current=page.title === 'About' ? 'page' : false) About
+  form#cy-search-form(role='search' hidden)
+    button#cy-search-close(type='button' aria-label='收起搜索') &lt;
+    label.sr-only(for='cy-search-input') 搜索文章
+    input#cy-search-input(type='search' placeholder='搜索文章…' autocomplete='off' aria-controls='cy-search-results')
+  section#cy-search-panel(aria-label='搜索结果' hidden data-index=url_for('/blog-search.json'))
+    p#cy-search-status(role='status' aria-live='polite') 输入标题、标签或正文中的关键词。
+    button#cy-search-retry(type='button' hidden) 重试
+    ul#cy-search-results
