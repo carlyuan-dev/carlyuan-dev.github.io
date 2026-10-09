@@ -342,3 +342,42 @@ body:has(.cy-directory) #footer { display: none; }
 
 .cy-route-status { position: absolute; right: 30px; top: 50px; font-size: 13px; color: var(--cy-ink); background: var(--cy-paper-soft); padding: 4px 12px; }
 #content-inner:focus { outline: none; }
+
+/* Article typography: reusable Markdown emphasis, notes and code. */
+#page-header #post-info .post-title,
+#page-header #post-info #post-meta,
+#page-header #post-info #post-meta a {
+  color: #171b19;
+  text-shadow: none;
+}
+#post #article-container {
+  font-size: 20px;
+  line-height: 1.9;
+}
+#post #article-container p { margin: 0 0 1.2em; }
+#post #article-container strong {
+  color: var(--cy-ink);
+  font-weight: 700;
+  background: linear-gradient(transparent 64%, rgba(100, 157, 126, .22) 64%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+#post #article-container blockquote {
+  margin: 1.4em 0;
+  padding: .2em 0 .2em 1em;
+  border-left: 3px solid rgba(100, 157, 126, .5);
+  background: transparent;
+  color: var(--cy-muted);
+}
+#post #article-container blockquote p:last-child { margin-bottom: 0; }
+#post #article-container :not(pre) > code {
+  color: var(--cy-green);
+  background: rgba(100, 157, 126, .10);
+  padding: .1em .3em;
+  border-radius: 3px;
+  font-size: .85em;
+}
+#post #article-container li { margin: .3em 0; }
+@media (max-width: 768px) {
+  #post #article-container { font-size: 18px; }
+}
