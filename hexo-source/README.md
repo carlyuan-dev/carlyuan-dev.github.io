@@ -39,3 +39,9 @@ npm run server -- --ip 127.0.0.1 --port 4000
 ## 文章标签规范
 
 每篇文章只设置一个主题标签，避免按项目名和细节堆叠标签。例如检索相关内容使用 `Rag`。
+
+## 字体分包
+
+`source/fonts/jinkai/` 与 `source/css/jinkai-font.css` 是已生成的 WOFF2 分包；正常 `npm ci` / `npm run build` 不需要 Python。完整 TTF 保留作原始素材，网页不再直接引用它。
+
+如需重新优化常用字符包，先构建，再在具备 `fonttools` 和 `brotli` 的独立 Python 环境运行 `python3 tools/subset-font.py`，最后再次构建。脚本使用已生成页面的可见文字生成 base 包，并将剩余全部字符分包，因此新增文章无需重新分包也能完整显示。无需修改 npm 锁文件。
