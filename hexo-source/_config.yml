@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: CAOYUAN
-subtitle: '记录与思考'
+title: Astra
+subtitle: ''
 description: '记录开发中遇到的问题、学习笔记与技术思考。'
 keywords: blog,notes
-author: Cao Yuan
+author: Astra
 language: zh-CN
 timezone: Asia/Shanghai
 
