@@ -381,3 +381,44 @@ body:has(.cy-directory) #footer { display: none; }
 @media (max-width: 768px) {
   #post #article-container { font-size: 18px; }
 }
+
+/* About: indented paragraphs and clear section spacing. */
+.type-about #article-container {
+  max-width: 860px;
+  margin: 0 auto;
+  color: #626963;
+  font-size: 20px;
+  line-height: 1.9;
+}
+.type-about #article-container h3 {
+  margin: 2.8em 0 .65em;
+  color: var(--cy-ink);
+  font-size: 24px;
+  line-height: 1.5;
+}
+.type-about #article-container h3:first-child { margin-top: 0; }
+.type-about #article-container > p {
+  margin: 0 0 .9em;
+  padding-left: 2em;
+}
+@media (max-width: 768px) {
+  .type-about #article-container { font-size: 18px; }
+  .type-about #article-container > p { padding-left: 1em; }
+}
+
+#page-site-info:has(.cy-about-subtitle) #site-title {
+  color: var(--cy-ink) !important;
+  text-shadow: none;
+}
+#page-site-info .cy-about-subtitle {
+  text-align: center;
+  margin: .5em 0 0;
+  color: var(--cy-muted);
+  opacity: .55;
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 400;
+  line-height: 1.6;
+  text-shadow: none;
+}
+
+html[data-theme='dark'] .type-about #article-container { color: #a9b2aa; }

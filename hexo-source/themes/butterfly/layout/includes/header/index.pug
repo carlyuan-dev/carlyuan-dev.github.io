@@ -45,7 +45,9 @@ header#page-header(class=`${headerClassName + isFixedClass}` style=bg_img)
         i.fas.fa-angle-down.scroll-down-effects
     else
       #page-site-info
-        h1#site-title=page.title || page.tag || page.category
+        h1#site-title=page.hero_title || page.title || page.tag || page.category
+        if page.type === 'about' && page.hero_subtitle
+          p.cy-about-subtitle=page.hero_subtitle
   else
     //- improve seo
     if globalPageType !== 'post'
