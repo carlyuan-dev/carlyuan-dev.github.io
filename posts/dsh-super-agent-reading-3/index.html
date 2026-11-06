@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DSH Super-agent文章速读（三） | Astra</title><meta name="author" content="Astra"><meta name="copyright" content="Astra"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="3. 事件驱动要让 Agent 主动参与工作，系统需要持续接收环境中的变化。Super-agent 将群聊消息、邮件与日程提醒、代码审查评论、CI 运行结果等称为 Trigger，由这些事件驱动后续判断与执行。 但接收事件只是入口。多来源消息中，并非所有内容都需要 Agent 处理，全部交给 LLM 判断会产生大量开销。因此，系统还需要解决哪些事件值得处理、交给哪个 Worker、附带多少上下文，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DSH Super-agent文章速读（三）">
+<meta property="og:url" content="https://carlyuan-dev.github.io/posts/dsh-super-agent-reading-3/index.html">
+<meta property="og:site_name" content="Astra">
+<meta property="og:description" content="3. 事件驱动要让 Agent 主动参与工作，系统需要持续接收环境中的变化。Super-agent 将群聊消息、邮件与日程提醒、代码审查评论、CI 运行结果等称为 Trigger，由这些事件驱动后续判断与执行。 但接收事件只是入口。多来源消息中，并非所有内容都需要 Agent 处理，全部交给 LLM 判断会产生大量开销。因此，系统还需要解决哪些事件值得处理、交给哪个 Worker、附带多少上下文，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg">
+<meta property="article:published_time" content="2026-11-04T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-04T04:00:00.000Z">
+<meta property="article:author" content="Astra">
+<meta property="article:tag" content="Agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DSH Super-agent文章速读（三）",
+  "url": "https://carlyuan-dev.github.io/posts/dsh-super-agent-reading-3/",
+  "image": "https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg",
+  "datePublished": "2026-11-04T04:00:00.000Z",
+  "dateModified": "2026-11-04T04:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Astra",
+      "url": "https://carlyuan-dev.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://carlyuan-dev.github.io/posts/dsh-super-agent-reading-3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+
+
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+
+
+
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DSH Super-agent文章速读（三）',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/jinkai-font.css"><link rel="stylesheet" href="/css/caoyuan-log.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/site/avatar-caoyuan.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/tags/"><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="cy-nav" id="nav" aria-label="主导航"><div id="menus"><div class="menus_items cy-nav-links"><span id="blog-info"><a class="site-page nav-site-title" href="/"><span class="site-name">Astra</span></a></span><a class="site-page" href="/tags/">Tags</a><a class="site-page" href="/archives/">Archives</a><button class="site-page cy-search-open" type="button" aria-expanded="false" aria-controls="cy-search-panel">Search</button><a class="site-page" href="/about/">About</a></div></div><form id="cy-search-form" role="search" hidden><button id="cy-search-close" type="button" aria-label="收起搜索">&lt;</button><label class="sr-only" for="cy-search-input">搜索文章</label><input id="cy-search-input" type="search" placeholder="搜索文章…" autocomplete="off" aria-controls="cy-search-results"></form><section id="cy-search-panel" aria-label="搜索结果" hidden data-index="/blog-search.json"><p id="cy-search-status" role="status" aria-live="polite">输入标题、标签或正文中的关键词。</p><button id="cy-search-retry" type="button" hidden>重试</button><ul id="cy-search-results"></ul></section></nav><div id="post-info"><h1 class="post-title">DSH Super-agent文章速读（三）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-04T04:00:00.000Z" title="发表于 2026-11-04 12:00:00">2026-11-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-04T04:00:00.000Z" title="更新于 2026-11-04 12:00:00">2026-11-04</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout hide-aside" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="3-事件驱动"><a href="#3-事件驱动" class="headerlink" title="3. 事件驱动"></a>3. 事件驱动</h2><p>要让 Agent 主动参与工作，系统需要持续接收环境中的变化。Super-agent 将群聊消息、邮件与日程提醒、代码审查评论、CI 运行结果等称为 Trigger，由这些事件驱动后续判断与执行。</p>
+<p>但接收事件只是入口。多来源消息中，并非所有内容都需要 Agent 处理，全部交给 LLM 判断会产生大量开销。因此，系统还需要解决哪些事件值得处理、交给哪个 Worker、附带多少上下文，以及何时可以在明确指令到来前提前开展工作，分别对应事件过滤、事件路由、上下文组织和提前行动。</p>
+<h3 id="3-1-事件过滤"><a href="#3-1-事件过滤" class="headerlink" title="3.1 事件过滤"></a>3.1 事件过滤</h3><p>真实环境中的消息量很大，但多数并不需要 Agent 介入。</p>
+<p>Super-agent 先通过程序规则检查事件来源、群组范围和白名单等确定性条件，例如忽略未纳入服务范围的群组（如闲聊群、不相关的业务群等）、指定类型的自动通知（如邮箱订阅的广告）等等，完成低成本的初步筛选；再让模型结合策略与上下文，判断剩余候选事件是否需要行动。</p>
+<p>这种两级过滤将程序层的确定性处理作为 Fast Path，将需要语义理解的模型判断作为 Slow Path，减少无效调用。程序规则负责执行明确的准入条件，模型负责处理依赖语境的判断。如下图所示：</p>
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-filtering.jpg" alt="两级过滤：先由程序层策略筛除大部分无关消息，再交由语义层策略判断。">
+  <figcaption>两级过滤：先由程序层策略筛除大部分无关消息，再交由语义层策略判断。</figcaption>
+</figure>
+
+<h3 id="3-2-事件路由"><a href="#3-2-事件路由" class="headerlink" title="3.2 事件路由"></a>3.2 事件路由</h3><p>现在什么消息该传递已经初步解决了，但是如果每条后续消息都需要 Router 调用工具转发给 Worker，仍然会给系统带来很高的调度开销和排队延迟。</p>
+<p>在 Super-agent 中，会对已经确定任务归属的消息建立直接投递路径，进一步减轻 Router 压力。同一个 PR、群聊话题或邮件串中的连续 Trigger 构成 Thread</p>
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-threads.jpg" alt="Thread 示例：同一个 IM 话题或同一个 GitHub Pull Request 下的连续 Trigger 构成一条 Thread">
+  <figcaption>Thread 示例：同一个 IM 话题或同一个 GitHub Pull Request 下的连续 Trigger 构成一条 Thread</figcaption>
+</figure>
+
+<p>Router 根据初始事件创建 Worker 后，Worker 可以订阅相关 Thread，后续事件由程序直接投递至所有有关联的 Worker，无需 Router 逐条转发（已订阅，Fast Path）。Router 仍可观测事件以掌握全局状态，但主要负责新任务的分派和跨任务协调（未订阅，Slow Path）。</p>
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-subscriptions.jpg" alt="订阅与直通：初始事件经由 Router 层创建 Worker 并建立订阅，同一 Thread 的后续事件直接发往该 Worker">
+  <figcaption>订阅与直通：初始事件经由 Router 层创建 Worker 并建立订阅，同一 Thread 的后续事件直接发往该 Worker</figcaption>
+</figure>
+
+<p>Thread 与 Worker 之间支持多对多订阅：一个任务可以关联多个信息来源，同一个讨论也可能涉及多个任务。Worker 与 Thread之间的订阅关系也是可变的，当事件超出当前任务范围时，Worker 可以取消订阅或交回 Router 重新分派。最终的关键结论仍由 Worker 汇报给 Router，再由 Router 统一对外反馈，以此 保持交互的一致性。</p>
+<h3 id="3-3-上下文组织"><a href="#3-3-上下文组织" class="headerlink" title="3.3 上下文组织"></a>3.3 上下文组织</h3><p>上下文的装载方式会影响模型获得的信息、推理效果和调用成本。</p>
+<p>Super-agent 用 Inline 与 Spill 管理上下文：近期可能使用的信息直接放入窗口（Inline）;较长或低频内容保留在外部（Spill），窗口内只留下必要的摘要和引用，供模型按需读取。</p>
+<p>这个思路跟很多 compact 的设计异曲同工，二者都控制上下文规模，但处理环节不同：compact 主要压缩已经积累的历史，Inline／Spill 则侧重决定哪些信息现在装载、哪些留待后续读取。两种机制可以配合使用，但压缩本身并不保证被省略的信息仍然可查。</p>
+<p>由于窗口容量有限，模型可能需要读取外部内容。为定位关联信息，系统为事件、Thread 和 Worker Session 分配唯一 ID，并在对象中保留相关对象的引用。读取一个对象时即可获得下一步可访问的关联入口，沿引用逐步补充背景，形成链式召回，无需一次加载全部历史。</p>
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-context.jpg" alt="链式召回：每次召回的对象均内联下一跳关联对象的 ID，支持沿引用关系逐跳展开上下文">
+  <figcaption>链式召回：每次召回的对象均内联下一跳关联对象的 ID，支持沿引用关系逐跳展开上下文</figcaption>
+</figure>
+
+<h3 id="3-4-提前行动"><a href="#3-4-提前行动" class="headerlink" title="3.4 提前行动"></a>3.4 提前行动</h3><p>有些环境信息尚未形成明确指令，但已经提供了可以开展准备工作的线索。</p>
+<p>Super-agent 可以根据这些信号提前进行尝试，例如看到问题反馈后先自行尝试复现，借鉴投机执行的思路，用额外计算换取更短的等待时间，并只在结果值得交付时通知用户，使用户有机会在明确提出请求前，就获得可用的分析或解决方案。</p>
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-speculation.jpg" alt="投机执行示例：群内还在讨论解决方案时，Super-agent 已在后台提交了修复 Pull Request">
+  <figcaption>投机执行示例：群内还在讨论解决方案时，Super-agent 已在后台提交了修复 Pull Request</figcaption>
+</figure>
+
+<p>当然，提前尝试不保证产生有效结果，也会带来未被采用的计算开销。因此，它主要改善的是响应时效，不一定提高单位算力的产出效率。在计算预算允许、任务命中率较高且操作影响可控的情况下，这是一种减少用户等待的方法。</p>
+<p>第三章围绕环境事件进入系统后的处理过程，介绍了过滤、路由、上下文组织和提前行动。通过这些机制，Agent 可以持续接收外部变化，判断是否需要介入，并将相关信息送到具体任务中，减少用户逐条下令和同步背景的工作。</p>
+<p>可以发现，到这一章为止，Super-agent 的设计大量借鉴了已有的工程机制，新意更多体现在将它们合理地组合起来：两级过滤和订阅直通借鉴了 Fast／Slow Path 与发布订阅机制；Inline／Spill 与 compact 都在控制上下文规模，但前者更强调按需装载；提前行动则借鉴投机执行，用额外计算减少等待。通过一套“组合拳”来支撑持续运行的 Agent。</p>
+<p>Agent 编排没有适用于所有场景的统一最优形式，需要根据任务特点、交互需求和资源约束选择合适的“配件”。因此，实际开发时也可以参考 DeepSeek Harness 团队的设计思路，从 Super-agent 中提取适合自身需求的机制，逐步落地并验证效果。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://carlyuan-dev.github.io">Astra</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://carlyuan-dev.github.io/posts/dsh-super-agent-reading-3/">https://carlyuan-dev.github.io/posts/dsh-super-agent-reading-3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://carlyuan-dev.github.io" target="_blank">Astra</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/?tag=Agent">Agent</a></div><div class="post-share"><div class="social-share" data-image="/img/site/avatar-caoyuan.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/dsh-super-agent-reading-2/" title="DSH Super-agent文章速读（二）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">DSH Super-agent文章速读（二）</div></div><div class="info-2"><div class="info-item-1">2. 双层架构从使用体验看，用户希望通过统一入口管理多个项目，由系统掌握相关背景并协调工作，就像与一位了解各项目进展的助手交流。但统一入口不必对应单一 Session：将全部任务放进同一个会话，容易受到串行执行和上下文混杂的影响；将任务完全拆到独立会话，又容易缺少全局协调。 为了兼顾连续性与吞吐量，Super-agent 将“维护全局连续性”与“高并发执行”拆分到两个不同的层级中：职责分为 Router 和 Worker...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/native-tool-call-validation/" title="Agent 一直重试，工具却一次没执行"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-12</div><div class="info-item-2">Agent 一直重试，工具却一次没执行</div></div><div class="info-2"><div class="info-item-1">DeepTutor-HKDSE 的 Agent 有时会反复请求模型修正格式：模型已经给出了工具调用，程序却要求它再试一次，但是反复重试后，工具始终没有被执行。（我愿称之为“赛博鬼打墙”） 观察到这个偶发问题后，我导出了 LLM 返回的原始响应报文，发现 tool_calls 中已经有工具名称和参数，但 content 为空，没有旧协议要求的 TOOL...</div></div></div></a><a class="pagination-related" href="/posts/dsh-super-agent-reading-1/" title="DSH Super-agent文章速读（一）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-01</div><div class="info-item-2">DSH Super-agent文章速读（一）</div></div><div class="info-2"><div class="info-item-1">1.为什么提出Super-agent随着模型独立执行任务和多 Agent 协作能力提升，Agent 开始接入消息、日程、邮件等工作环境。但现有系统仍以独立 Session 为主，多任务推进需要用户手动切换会话、同步上下文，人的注意力逐渐成为限制。 Super-agent 希望打破 Agent...</div></div></div></a><a class="pagination-related" href="/posts/dsh-super-agent-reading-2/" title="DSH Super-agent文章速读（二）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-02</div><div class="info-item-2">DSH Super-agent文章速读（二）</div></div><div class="info-2"><div class="info-item-1">2. 双层架构从使用体验看，用户希望通过统一入口管理多个项目，由系统掌握相关背景并协调工作，就像与一位了解各项目进展的助手交流。但统一入口不必对应单一 Session：将全部任务放进同一个会话，容易受到串行执行和上下文混杂的影响；将任务完全拆到独立会话，又容易缺少全局协调。 为了兼顾连续性与吞吐量，Super-agent 将“维护全局连续性”与“高并发执行”拆分到两个不同的层级中：职责分为 Router 和 Worker...</div></div></div></a></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2026 By Astra</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/home-personal.js"></script><script src="/js/blog-navigation.js"></script><script src="/js/blog-transitions.js"></script></div></body></html>
