@@ -15,9 +15,10 @@ Super-agent 希望打破 Agent 与单次会话的绑定，使其成为能跨会�
 
 为此，文章提出五个支撑模块：双层架构、事件驱动、面向人的交互、计算与状态及执行环境分离，以及外部 Watchdog。
 
-下图展示了 Super-agent 的整体系统架构，图中各模块的标号 [2] 至 [6] 分别对应原文第 2 至第 6 节：
-
-![Super-agent 整体系统架构：Router、Worker Session、事件过滤、多信道交互、执行环境、Session 数据库及 Watchdog](/uploads/dsh-super-agent-architecture.jpg)
+<figure class="blog-figure">
+  <img src="/uploads/dsh-super-agent-architecture.jpg" alt="Super-agent 整体系统架构：Router、Worker Session、事件过滤、多信道交互、执行环境、Session 数据库及 Watchdog">
+  <figcaption>Super-agent 整体系统架构，标号 [2] 至 [6] 对应下文第 2 至第 6 节</figcaption>
+</figure>
 
 多任务场景中，人的负担除了下达指令和验收，还包括维护各个任务的上下文、同步新决定，以及理解不同 Agent 的进度反馈。即使任务彼此独立，频繁切换也需要人反复恢复工作背景。
 
