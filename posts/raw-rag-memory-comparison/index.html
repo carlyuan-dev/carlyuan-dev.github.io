@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RAW-RAG ：原文检索与复杂记忆系统的比较 | Astra</title><meta name="author" content="Astra"><meta name="copyright" content="Astra"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="常见的 Agent 记忆系统通常是对历史对话进行处理，例如提取事实、生成摘要等；之后随着聊天的进行继续追加、更新或删除已有记忆。回答问题时，系统检索这些处理后的内容，通过模型筛选把相关内容提供给 LLM。 RAW-RAG 则提出了另一个方向：直接保留并检索原始历史，能达到什么样的效果？它采用固定流程：先将聊天历史按 256 tokens 分块建立索引，相邻块重叠 32 tokens；提问时通过向量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RAW-RAG ：原文检索与复杂记忆系统的比较">
+<meta property="og:url" content="https://carlyuan-dev.github.io/posts/raw-rag-memory-comparison/index.html">
+<meta property="og:site_name" content="Astra">
+<meta property="og:description" content="常见的 Agent 记忆系统通常是对历史对话进行处理，例如提取事实、生成摘要等；之后随着聊天的进行继续追加、更新或删除已有记忆。回答问题时，系统检索这些处理后的内容，通过模型筛选把相关内容提供给 LLM。 RAW-RAG 则提出了另一个方向：直接保留并检索原始历史，能达到什么样的效果？它采用固定流程：先将聊天历史按 256 tokens 分块建立索引，相邻块重叠 32 tokens；提问时通过向量">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg">
+<meta property="article:published_time" content="2026-10-26T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-26T04:00:00.000Z">
+<meta property="article:author" content="Astra">
+<meta property="article:tag" content="Rag">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "RAW-RAG ：原文检索与复杂记忆系统的比较",
+  "url": "https://carlyuan-dev.github.io/posts/raw-rag-memory-comparison/",
+  "image": "https://carlyuan-dev.github.io/img/site/avatar-caoyuan.svg",
+  "datePublished": "2026-10-26T04:00:00.000Z",
+  "dateModified": "2026-10-26T04:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Astra",
+      "url": "https://carlyuan-dev.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://carlyuan-dev.github.io/posts/raw-rag-memory-comparison/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+
+
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+
+
+
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RAW-RAG ：原文检索与复杂记忆系统的比较',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/jinkai-font.css"><link rel="stylesheet" href="/css/caoyuan-log.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/site/avatar-caoyuan.svg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/tags/"><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="cy-nav" id="nav" aria-label="主导航"><div id="menus"><div class="menus_items cy-nav-links"><span id="blog-info"><a class="site-page nav-site-title" href="/"><span class="site-name">Astra</span></a></span><a class="site-page" href="/tags/">Tags</a><a class="site-page" href="/archives/">Archives</a><button class="site-page cy-search-open" type="button" aria-expanded="false" aria-controls="cy-search-panel">Search</button><a class="site-page" href="/about/">About</a></div></div><form id="cy-search-form" role="search" hidden><button id="cy-search-close" type="button" aria-label="收起搜索">&lt;</button><label class="sr-only" for="cy-search-input">搜索文章</label><input id="cy-search-input" type="search" placeholder="搜索文章…" autocomplete="off" aria-controls="cy-search-results"></form><section id="cy-search-panel" aria-label="搜索结果" hidden data-index="/blog-search.json"><p id="cy-search-status" role="status" aria-live="polite">输入标题、标签或正文中的关键词。</p><button id="cy-search-retry" type="button" hidden>重试</button><ul id="cy-search-results"></ul></section></nav><div id="post-info"><h1 class="post-title">RAW-RAG ：原文检索与复杂记忆系统的比较</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-26T04:00:00.000Z" title="发表于 2026-10-26 12:00:00">2026-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-26T04:00:00.000Z" title="更新于 2026-10-26 12:00:00">2026-10-26</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout hide-aside" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>常见的 Agent 记忆系统通常是对历史对话进行处理，例如提取事实、生成摘要等；之后随着聊天的进行继续追加、更新或删除已有记忆。回答问题时，系统检索这些处理后的内容，通过模型筛选把相关内容提供给 LLM。</p>
+<p>RAW-RAG 则提出了另一个方向：直接保留并检索原始历史，能达到什么样的效果？它采用固定流程：先将聊天历史按 256 tokens 分块建立索引，相邻块重叠 32 tokens；提问时通过向量相似度召回top 128，再通过一个Ranker模型重排序选出 15 项，将其原文交给 LLM 回答。部分配置会将选中的窗口展开为完整对话轮次。</p>
+<p>论文在四个基准、七组“基准＋回答模型”设置中进行比较。RAW-RAG 在六组中领先所比较的复杂记忆系统，领先幅度为 0.13—5.53 个百分点。相关结果不意味着复杂记忆系统将被淘汰或者没有价值（今天看到很多帖子把RAW-RAG吹上天，理性看待没这回事），但是支持把 RAW-RAG 作为一个有竞争力的基线。</p>
+<p>论文还讨论了记忆加工可能影响事实本身，也可能影响时间顺序和依赖关系的问题。例如，“明早8点开会”和“会议推迟至后天”共同决定会议真正时间。提取出了会议时间，却没有提取出事实状态的变化，仍然可能回答错误。</p>
+<p>论文用两个指标分析这个问题：</p>
+<ul>
+<li>证据覆盖率：检索结果证据完全，足以回答问题的比例。</li>
+<li>证据利用率：在证据充分的问题中，模型回答正确的比例。</li>
+</ul>
+<p>这两个指标可以帮助区分检索与回答阶段的问题。RAW-RAG 的证据覆盖率较高，但证据利用率并不总是最高，较高的覆盖率可以补偿利用率上的不足。覆盖率乘以利用率，可以理解为“证据充分且回答正确”的比例（不等于整体正确率，仅供快速理解）。另外，不同系统检索到充分证据的题目集合不同，因此不能仅凭利用率高低判断谁更善于利用证据。</p>
+<p>成本方面，RAW-RAG 省去了 LLM 事实提取、摘要生成等前置加工。论文的计时实验显示，其写入到可检索的耗时比起LLM提取显著较低，但检索并非始终最快，计时也不包含最终回答生成。因此，真实落地长期使用的性价比还需要结合查询频率、证据长度和存储增长评估。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这个方向是有趣的，通过简单的Rag即可实现能与复杂记忆系统近似的效果。将来探索Agent的长期记忆功能可以尝试一下用这种方式，效仿论文方式先建立原文检索基线，再验证语义分块、摘要、图结构或动态维护是否带来收益；验收时看回答正确率、证据覆盖、延迟和成本，可以得到一些有意思的成果。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://carlyuan-dev.github.io">Astra</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://carlyuan-dev.github.io/posts/raw-rag-memory-comparison/">https://carlyuan-dev.github.io/posts/raw-rag-memory-comparison/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://carlyuan-dev.github.io" target="_blank">Astra</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/?tag=Rag">Rag</a></div><div class="post-share"><div class="social-share" data-image="/img/site/avatar-caoyuan.svg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/late-grading-result/" title="切换练习后，迟到的批改结果该怎么办？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">切换练习后，迟到的批改结果该怎么办？</div></div><div class="info-2"><div class="info-item-1">在 DeepTutor-HKDSE 里提交练习 A 后，用户不一定会守着页面等批改（批改时间还是有点小长的，后续可以考虑优化一下），可能转头就去做 B 了。最初的设计是由前端等待批改结果，如果用户已经切到 B，A 的结果这时才返回，回调又直接更新页面，B 上就可能冒出 A 的评分或者错误提示。 这里要考虑两个问题：一是 A 的结果后到，不能修改当前 B 页面；二是要保存 A...</div></div></div></a><a class="pagination-related" href="/posts/dsh-super-agent-reading-1/" title="DSH Super-agent文章速读（一）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">DSH Super-agent文章速读（一）</div></div><div class="info-2"><div class="info-item-1">1.为什么提出Super-agent随着模型独立执行任务和多 Agent 协作能力提升，Agent 开始接入消息、日程、邮件等工作环境。但现有系统仍以独立 Session 为主，多任务推进需要用户手动切换会话、同步上下文，人的注意力逐渐成为限制。 Super-agent 希望打破 Agent...</div></div></div></a></nav></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2026 By Astra</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/home-personal.js"></script><script src="/js/blog-navigation.js"></script><script src="/js/blog-transitions.js"></script></div></body></html>
